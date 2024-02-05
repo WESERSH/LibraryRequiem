@@ -1,0 +1,15 @@
+﻿@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = "Читать";
+}
+
+<style> </style>
+<div class="book">
+    @if (ViewBag.Book != null)
+    {
+        @foreach(var paragraph in ViewBag.Book)
+        {
+            @Html.Raw(paragraph.ToString());
+        }
+    }
+</div>

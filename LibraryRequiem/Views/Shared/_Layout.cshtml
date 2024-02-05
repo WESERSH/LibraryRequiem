@@ -1,0 +1,91 @@
+﻿<!-- Объявление типа документа, указывает браузеру на использование стандарта HTML5 -->
+<!DOCTYPE html>
+<!-- Открывающий тег html, атрибут 'lang' указывает основной язык документа русский -->
+<html lang="ru">
+<head>
+    <!-- Устанавливаем кодировку для контента страницы -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Задаем название страницы, "Title" будет заменен на значение из ViewData -->
+    <title>@ViewData["Title"]</title>
+    <!-- Подключаем минифицированную версию Bootstrap для стилей -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Подключаем файл стилей site.css для кастомизации дизайна страницы -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- Подключаем файл стилей LibraryRequiem.styles.css для кастомизации дизайна страницы; используем версионирование для кэширования -->
+    <link rel="stylesheet" href="~/LibraryRequiem.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Шапка сайта, содержит навигационное меню -->
+    <header>
+        <!-- Основная навигационная панель -->
+        <nav class="navbar">
+            <!-- Контейнер для логотипа -->
+            <div class="logo">
+                <!-- Ссылка на главную страницу с изображением логотипа -->
+                <a class="logo" asp-controller="home" asp-action="index"><img src="~/images/Livsi_logo.png"></a>
+            </div>
+            <ul>
+                <!-- Элемент выпадающего списка -->
+                <li class="dropdown">
+                    <!-- Форма с кнопкой для перехода к коллекции -->
+                    <form asp-action="Index" asp-controller="Collection"><button class="href_text">Коллекция</button></form>
+                    <!-- Контент выпадающего списка, отображающийся при наведении -->
+                    <div class="dropdown-content">
+                        <!-- Проверка и итерация по элементам, переданным через ViewBag.Genres -->
+                        @if (ViewBag.Genres != null)
+                        {
+                            @foreach (var item in ViewBag.Genres)
+                            {
+                                <!-- Форма для отправки жанра коллекции методом POST -->
+                                <form method="post" asp-action="SearchResult" asp-controller="Collection">
+                                    <input class="input" type="submit" name="searchGenre" value="@item" />
+                                </form>
+                            }
+                        }
+                    </div>
+                </li>
+            </ul>
+            <!-- Форма поиска -->
+            <form method="post" asp-controller="Collection" asp-action="SearchResult">
+                <div class="search">
+                        <input value="@ViewBag.SearchField" class="search_input" type="text" name="searchitem" placeholder="Найти...">
+                        <!-- Кнопка для отправки формы с иконкой поиска -->
+                        <button><img src="/images/icons8-google-поиск-50.png" /></button>
+                </div>
+            </form>
+        </nav>
+    </header>
+    <!-- Основной контейнер для содержимого страницы -->
+    <div class="container">
+        <!-- Главное содержимое страницы, вставленное из других Razor представлений -->
+        <main role="main" class="page">
+            @RenderBody()
+        </main>
+        <!-- Подвал сайта с контактной информацией и ссылками на социальные сети-->
+        <footer class="footer">  
+            <div class="footer_content">
+                <div class="footer_links">
+                    <!-- Ссылки на социальные сети (или другие страницы), используется заглушка asp-action="NotFind" -->
+                    <a asp-action="NotFind">
+                        <img src="~/images/telegram-logo-png-telegram-logo-png-img-504-504-free-transparent-telegram-900x520.png"/>
+                    </a>
+                    <a asp-action="NotFind">
+                        <img src="~/images/square_83.png"/>
+                    </a>
+                </div>
+                <!-- Логотип и копирайт в подвале сайта -->
+                <div class="footer_logo">
+                    <p>LivsiLib 2023</p>
+                </div>
+            </div>
+        </footer>
+        <!-- Подключение скриптов jQuery, Bootstrap и пользовательских скриптов -->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <!-- Вставка дополнительных скриптов, определяемых в других Razor-представлениях -->
+        @await RenderSectionAsync("Scripts", required: false)
+    </div>
+</body>
+</html>

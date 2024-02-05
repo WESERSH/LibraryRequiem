@@ -1,0 +1,79 @@
+﻿<!-- Передаем в представление объект BookModel -->
+@model LibraryRequiem.Models.BookModel
+
+@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = $"{Model.Title} - редактирование";
+}
+<!-- Так как формы редактирования и добавления книг похожи используется тот же контейнер -->
+<div class="create_container">
+    <h2>@Model.Title - Редактирование</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-auto">
+            <!-- Атрибут enctype формах определяет способ кодирования значение multipart/form-data используется когда форма отправляет файлы или большие объемы данных -->
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <!-- Данный фрагмент используется для вывода сообщений об ошибках валидации модели на веб-странице -->
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <!-- На сервер отправляется id модели -->
+                <input type="hidden" asp-for="Id" />
+                <!-- На сервер отправляется свойство BookFilePath -->
+                <input type="hidden" asp-for="BookFilePath" />
+                <!-- На сервер отправляется свойство BookImagePath -->
+                <input type="hidden" asp-for="BookImagePath" />
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Author" class="controll-label"></label>
+                    <input asp-for="Author" class="form-controll"/>
+                    <span asp-validation-for="Author" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Genre" class="control-label"></label>
+                    <input asp-for="Genre" class="form-control" />
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateOfUpload" class="control-label"></label>
+                    <input asp-for="DateOfUpload" class="form-control" />
+                    <span asp-validation-for="DateOfUpload" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Tags" class="control-label"></label>
+                    <input asp-for="Tags" class="form-control" />
+                    <span asp-validation-for="Tags" class="text-danger"></span>
+                </div>
+                    <div class="form-group">
+                        <label asp-for="BookImagePath" class="control-label"></label>
+                        <input type="file" name="bookImage" />
+                        <span asp-validation-for="BookImagePath" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BookFilePath" class="control-label"></label>
+                        <input type="file" name="bookFile" />
+                        <span asp-validation-for="BookFilePath" class="text-danger"></span>
+                    </div>
+                <div class="form-group">
+                    <input asp-action="Edit" type="submit" value="Сохранить" class="btn btn-primary" />
+                </div>
+            </form>
+            <form method="post">
+            <div class="form-group">
+                <!-- Кнопка запускает деействие Delete и передает в него id книги -->
+                <button asp-action="Delete" asp-route-id="@Model.Id">Удалить</button>
+            </div>
+            </form>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

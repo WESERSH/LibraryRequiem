@@ -1,0 +1,74 @@
+﻿<!-- Передаем в представление коллекцию объектов BookModel -->
+@model IEnumerable<LibraryRequiem.Models.BookModel>
+
+@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = "LivsiLib - Главная";
+}
+<!-- Контейнер страницы -->
+<div class="home_container">
+    <!-- Содержимое страницы -->
+    <div class="home_content">
+        <!-- Раздел с новинками -->
+        <div class="home_new_books">
+            <h2>Новинки</h2>
+            <!-- Сетка с картами книг -->
+            <div class="cards_home">
+                <!-- Перебор каждого экземпляра книги в модели -->
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <!-- Карта книги -->
+                        <div class="card">
+                            <div class="card_top">
+                                <!-- Задается действие перехода на страницу с информацией о книге, при клике на её изображение -->
+                                <a class="card_image" asp-controller="Collection" asp-action="Details" asp-route-id="@item.Id"><img src="@item.BookImagePath"></a>
+                            </div>
+                            <div class="card_bottom">
+                                <!-- Задается действие перехода на страницу с информацией о книге, при клике на название -->
+                                <a class="card_title" asp-controller="Collection" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                                <!-- В Post запросе в действие SearchResult передается имя автора, при нажатии на него -->
+                                <form class="author" method="post" asp-action="SearchResult" asp-controller="Collection">
+                                    <button class="author_text" value="@item.Author" name="searchitem">@item.Author</button>
+                                </form>
+                                <div class="buttons">
+                                    <!-- Задается действие перехода на страницу с информацией о книге, при клике на кнопку -->
+                                    <button class="detail-button">
+                                        <a class="text" asp-controller="Collection"  asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                                    </button>
+                                    <!-- Кнопка скачивания, передаёт в метод Download Id книги -->
+                                    <button class="download-button">
+                                        <a class="text" asp-controller="Collection"  asp-action="Download" asp-route-id="@item.Id">Скачать</a>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <!-- Раздел с новостями сайта -->
+        <div class="site_news">
+            <h2>Новости сайта</h2>
+            <div>
+                <p>15.12.2023</p>
+                <ul>
+                    <li>Обновлен раздел "Новинки на главной странице"</li>
+                </ul>
+                <br>
+                <p>14.12.2023</p>
+                <ul>
+                    <li>Добавлена ссылка на приложение для чтения книг</li>
+                    <li>Изменена тема сайта</li>
+                </ul>
+                <br>
+                <p>13.12.2023</p>
+                <ul>
+                    <li>На главную страницу добавлены новинки и новости сайта</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

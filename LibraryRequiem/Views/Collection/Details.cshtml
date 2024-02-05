@@ -1,0 +1,60 @@
+﻿<!-- Передаем в представление объект BookModel -->
+@model LibraryRequiem.Models.BookModel
+
+@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = @Model.Title;
+}
+<!-- Контейнер страницы -->
+<div class="detail_container">
+    <!-- Контейнер левой части страницы -->
+    <div class="details_left">
+        <div class="image">
+            <!-- Обращение к модели страницы для получения пути к обложке -->
+            <img class="details_image" src="@Model.BookImagePath"/>
+            <!-- Кнопка редактирования книги, передает в контроллер Edit id книги и перенаправляет пользователя на страницу редактирования  книги -->
+            <form method="get">
+                <button class="edit_button" type="submit" class="details_edil" asp-route-id="@Model.Id" asp-action="Edit" value="Редактировать">
+                    <img class="edit_icon" src="~/images/675757_edit_512x512.png"/>
+                </button>
+            </form>
+        </div>
+        <form method="get">
+        <ul class="detail_info">
+            <oi class="detail_download">
+                <!-- Кнопка скачивания, передаёт в метод Download Id книги -->
+                <button type="submit" class="detail_download_button" asp-route-id="@Model.Id" asp-action="Download">Скачать</button>
+            </oi>
+            <oi class="author_detail">
+                <!-- В Post запросе в действие SearchResult передается имя автора, при нажатии на него -->
+                <button type="submit" class="detail_author_button" value="@Model.Author" name="searchitem" asp-action="SearchResult">Автор: @Model.Author</button>
+            </oi>
+            <oi class="detail_date">
+                <label>Дата загрузки:</label>
+                <!-- Обращение к полю DateOfUpload модели BookModel для получения даты загрузки -->
+                <a style="text-decoration: none; color: black;">@Model.DateOfUpload</a>
+            </oi>
+        </ul>
+        </form>
+    </div>
+    <!-- Контейнер правой части страницы -->
+    <div class="detail_right">
+        <div class="detail_name">
+            <!-- Обращение к полю Title модели BookModel для получения названия книги -->
+            <h2 class="detail_name_main">@Model.Title</h2>
+        </div>
+        <div class="description_with_tags">
+            <div class="detail_description_tab">
+                <h3 class="detail_description_tab_text">Описание</h3>
+            </div>
+            <div class="detail_description_content">
+                <!-- Обращение к полю Description модели BookModel для получения опсания книгии -->
+                <div class="detail_description_text">@Model.Description</div>
+            </div>
+            <ul class="detail_tags">
+                <!-- Обращение к полю Tags модели BookModel для получения тегов книги -->
+                <li class="detail_tag">@Model.Tags</li>
+            </ul>
+        </div>
+    </div>
+</div>

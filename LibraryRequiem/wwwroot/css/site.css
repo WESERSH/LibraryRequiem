@@ -1,0 +1,448 @@
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    display:flex;
+    margin-bottom: 60px;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #f2d785;
+}
+.href_text {
+    text-decoration: none;
+    color: #1a1a1a;
+    background-color: #a67968;
+}
+.href_text:hover {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #f2c288;
+}
+.navbar{
+    z-index: 100;
+    position:absolute;
+    height: 90px;
+    width: 100%;
+    background-color: #168c8c;
+}
+.logo{
+    position:absolute;
+    top: 15%;
+    margin-left: 2%;
+}
+.search{
+    position: relative;
+    left: -10%;
+
+}
+.search button{
+    border: none;
+    position: absolute;
+    left: 166px;
+    top: -3.5px;
+    background-color: #168c8c00;
+}
+.search img{
+    position:relative;
+    width: 30px;
+}
+.search_input{
+    position:relative;
+    height: 25px;
+    width: 200px;
+}
+.dropdown {
+    display: block;
+    position: absolute;
+    top: 25%;
+    left: 225px;
+    background-color: #a67968;
+}
+.dropdown form button{
+    background-color: #f2c288;
+}
+.dropdown form button:hover {
+    background-color: #a67968;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    width: 150%;
+    overflow: auto;
+    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
+}
+.dropdown:hover .dropdown-content {
+    display: none;
+    display: block;
+    background-color: #263433;
+    width: fit-content;
+}
+ .dropdown-content input {
+    position:relative;
+    display: block;
+    border: none;
+    background-color: #63bfb6;
+    color: #000000;
+    padding: 5px;
+    font-family: 'Comic Sans MS';
+    width: 100%;
+    text-align:left;
+    }
+.dropdown-content input:hover {
+    background-color: #168c8c;
+}
+.dropdown button:hover {
+    position: center;
+    text-align: justify;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-family: Verdana;
+    color: white;
+    background-color: #128d6a;
+    width: 100%;
+    height: 50px;
+}
+.dropdown button {
+    position: center;
+    text-align: justify;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-family: Verdana;
+    color: white;
+    background-color: #12b386;
+    width: 100%;
+    height: 50px;
+}
+.logo:hover{
+
+    outline: 3px solid #006060;
+}
+.collection_container, .search_container, details_container {
+    padding-top: 20px;
+    background-color: #f2c288;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0 -30px;
+}
+
+.create {
+    text-decoration: none;
+    color: black;
+}
+.create:hover{
+    text-decoration: none;
+    color: black;
+}
+
+.create_button {
+    top: 120px;
+    margin-left: 72%;
+    position: absolute;
+    display: flex;
+    background-color: #63bfb6
+}
+    .create_button:hover {
+        background-color: #168c8c;
+    }
+.card {
+    border: 5px solid #a67968;
+    width: 225px;
+    min-height: 500px;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.2s;
+    position: relative;
+}
+.card:hover {
+    box-shadow: 2px 4px 8px #168c8c;
+}
+.card_top{
+    background: #a67968;
+    flex: 0 0 300px;
+    position: relative;
+    overflow: hidden;
+}
+.card_image{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.card_image > img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: 0.2s;
+}
+.card_bottom {
+    background: #008b8b;
+    min-height: 195px;
+    max-height: 195px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    padding: 10px;
+    border: solid 5px #a67968;
+}
+.card_title {
+    text-decoration: none;
+    justify-content: left;
+    display: -webkit-box;
+    -webkit-line-break: 80;
+    -webkit-box-orient: horizontal;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+    color: #e9eede;
+}
+.card_title:hover {
+    color: white;
+}
+.buttons{
+    position:absolute;
+    bottom: 10px;
+    display: table-cell;
+    width: 86%;
+    font-size: 17px;
+    text-align: center;
+    margin: 0px 0px 0px 0px;
+}
+.cards {
+    padding-top: 150px;
+    padding-bottom: 200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 240px);
+    width: 100%;
+    justify-content: center;
+    align-content:center;
+    column-gap: 30px;
+    row-gap: 40px;
+}
+.text, .author_text {
+    text-decoration: none;
+    color: #636363;
+}
+.text:hover, .author_text:hover {
+    color: #008b8b;
+}
+.download-button {
+    background-color: #d1edb3;
+    border: 0;
+}
+.download-button:hover {
+    background-color: #b0c798;
+    border: 0;
+}
+.detail-button{
+    background-color: #efcc94;
+    border: 0;
+}
+
+.read-button {
+    background-color: #a67968;
+    border: 0;
+}
+
+.read-button:hover {
+    background-color: #efcc94;
+    border: 0;
+}
+
+.detail-button:hover {
+    background-color: #caad7f;
+    border: 0;
+}
+.author{
+    position:absolute;
+    bottom: 40px;
+    left: 18px;
+    display: flex;
+}
+.author button{
+    background-color: #f2d785
+}
+.author button:hover {
+    background-color: #f2c288
+}
+.detail_container {
+    background-color: #f2c288;
+    align-items:center;
+    justify-content:center;
+    padding: 150px 5px 50px 5px;
+    margin: 0 5%;
+    position: absolute;
+    display: flex;
+    right:0;
+    left: 0;
+}
+.details_left{
+    position:relative;
+}
+.details_image {
+    border: 5px groove #12b386;
+    width: 250px;
+    height: 370px;
+}
+.edit_icon{
+    border: none;
+    width: 30px;
+}
+.edit_button{
+    position:relative;
+    border: none;
+    bottom: 365px;
+    right: -210px;
+    background-color: #302f2f00;
+}
+.detail_info{
+    background-color: #008b8b;
+    position:relative;
+    margin-top: -32px;
+    padding: 0 5px 5px 5px;
+    width: 250px;
+    align-content:center;
+}
+.detail_download_button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    background-color: #f2d785;
+}
+.detail_author_button {
+    background-color: #f2d785;
+    margin-bottom: 10px;
+    width: 100%;
+}
+    .detail_author_button:hover, .detail_download_button:hover {
+        background-color: #f2c288
+    }
+.detail_right {
+    position:relative;
+    margin: 20px;
+    width: 60%;
+}
+.description_with_tags {
+    display: block;
+    enable-background: new;
+    background-color: #008b8b3d
+}
+.description_with_tags div{
+    position:relative;
+    margin: 0 0 -10px 0;
+    padding: 0 10px 10px 10px
+}
+.home_container {
+    background-color: #f2c288;
+    position: relative;
+    padding: 150px 5% 30px 5%;
+    margin: 0 -50px;
+}
+.home_content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.home_new_books{
+    position:relative;
+}
+.site_news {
+    position: relative;
+}
+.calibre_label, .search_item {
+    top: 120px;
+    margin-left: -45%;
+    position: absolute;
+    display: flex;
+}
+.calibre_href{
+    text-decoration-line: none
+}
+.site_news div{
+    padding-right: -10px;
+    overflow-y:scroll;
+    max-height: 300px;
+}
+.cards_home {
+    display: inline-grid;
+    padding: 0 0 0 0;
+    grid-template-columns: repeat(auto-fill, 240px);
+    justify-content: flex-start;
+    align-content: center;
+    column-gap: 30px;
+    row-gap: 10px;
+    max-height: 137vh;
+    overflow-y: scroll;
+    max-width: 50vw;
+}
+.container {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto 50px auto;
+}
+.footer {
+    position: relative;
+    width: 100vw;
+    height: 200px;
+    left: 0;
+    top: 100%;
+    margin: 0 10px 0 0;
+    background-color: #a67968
+}
+
+.footer_content {
+    position:relative;
+    display:flex;
+    margin: 80px;
+    justify-content: space-between;
+}
+
+.footer_links a img{
+    width: 40px;
+    height: 40px;
+}
+.footer_links{
+    bottom: 40px;
+    display:flex;
+    position: relative;
+    flex-direction:column;
+}
+.create_container {
+    margin: 80px auto 10px auto;
+    padding: 60px 20px;
+    position: relative;
+    max-width: 60vw;
+    height: contain;
+    background-color: #f2c288;
+}
+.book{
+    display:block;
+    margin-top: 20vh;
+}
+.book body{
+    display: block;
+    font-size: 1000px;
+}

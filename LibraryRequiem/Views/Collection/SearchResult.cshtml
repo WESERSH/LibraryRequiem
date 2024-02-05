@@ -1,0 +1,54 @@
+﻿<!-- Передаем в представление коллекцию объектов BookModel -->
+@model IEnumerable<LibraryRequiem.Models.BookModel>
+
+@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = ViewBag.Search;
+
+}
+<!-- Контейнер страницы -->
+<div class="search_container">
+    <!-- Проверка модели на null, если её не провести то приложение остановится с исключением NullReferencesExpection -->
+    @if(Model != null)
+    {
+        <!-- Отображение значения строки поиска в заголовке -->
+        <h3 class="search_item">@ViewBag.Search</h3>
+        <!-- Сетка с картами книг -->
+        <div class="cards">
+            <!-- Перебор каждого экземпляра книги в модели -->
+            @foreach (var item in Model)
+            {
+                <!-- Карта книги -->
+                <div class="card">
+                    <div class="card_top">
+                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на её изображение -->
+                        <a class="card_image" asp-action="Details" asp-route-id="@item.Id"><img src="@item.BookImagePath"></a>
+                    </div>
+                    <div class="card_bottom">
+                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на название -->
+                        <a class="card_title" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                        <!-- В Post запросе в действие SearchResult передается имя автора, при нажатии на него -->
+                        <form class="author" method="post" asp-action="SearchResult" asp-controller="Collection">
+                            <button class="author_text" value="@item.Author" name="searchitem">@item.Author</button>
+                        </form>
+                        <div class="buttons">
+                            <!-- Задается действие перехода на страницу с информацией о книге, при клике на кнопку -->
+                            <button class="detail-button">
+                                <a class="text" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                            </button>
+                            <!-- Кнопка скачивания, передаёт в метод Download Id книги -->
+                            <button class="download-button">
+                                <a class="text" asp-action="Download" asp-route-id="@item.Id">Скачать</a>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+        <!-- Если по данному запросу нет результата то отображается этот заголовок -->
+    <!-- else {
+    <h1>Пустая строка поиска</h1>
+    } -->
+</div>

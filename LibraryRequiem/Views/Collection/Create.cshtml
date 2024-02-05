@@ -1,0 +1,69 @@
+﻿<!-- Передаем в представление объект BookModel -->
+@model LibraryRequiem.Models.BookModel
+
+@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = "Добавить книгу";
+}
+<!-- Контейнер страницы -->
+<div class="create_container">
+    <h2>Добавить книгу в коллекцию</h2>
+    <hr />
+    <!-- Использование класса row системы BootsTrap, который позволяет создать горизонтальный ряд с колонками -->
+    <div class="row">
+        <!-- Использование класса col-md-auto системы BootsTrap, который  указывает, что элемент будет занимать несколько колонок в широком экране (md) -->
+        <div class="col-md-auto">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <!-- Получение имени свойства Title модели BookModel -->
+                    <label asp-for="Title"></label>
+                    <!-- Значение этого input будут присвоены модели, его свойству Title-->
+                    <input asp-for="Title"/>
+                    <!-- При неверном заполнении формы отображает ошибку связанную с этим свойством -->
+                    <span asp-validation-for="Title"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Author"></label>
+                    <input asp-for="Author" />
+                    <span asp-validation-for="Author" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Genre"></label>
+                    <input asp-for="Genre" />
+                    <span asp-validation-for="Genre" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <input asp-for="Description" />
+                    <span asp-validation-for="Description" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Tags"></label>
+                    <input asp-for="Tags" />
+                    <span asp-validation-for="Tags" />
+                </div>
+                <div class="form-group">
+                    <!-- Получение имени свойства BookModel модели BookModel -->
+                    <label asp-for="BookImagePath"></label>
+                    <!-- Через это поле пользователи могут выбрать файлы для отправки на сервер, с именем элемента ввода bookImage -->
+                    <input type="file" name="bookImage" required />
+                    <!-- При неверном заполнении формы отображает ошибку связанную со свойством BookImagePath-->
+                    <span asp-validation-for="BookImagePath" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="BookFilePath"></label>
+                    <input type="file" name="bookFile" required />
+                    <span asp-validation-for="BookFilePath" />
+                </div>
+                <div class="form-group">
+                    <!-- Кнопка при нажатии на которую введенные данные отправятся на сервер, btn bnt-primary - класс bootstrap для выделения кнопки  -->
+                    <input type="submit" value="Сохранить" class="btn btn-primary" />
+                </div>
+                <div class="form-group">
+                    <a asp-action="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
