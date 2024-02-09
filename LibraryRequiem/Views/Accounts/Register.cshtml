@@ -1,0 +1,27 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model LibraryRequiem.Models.ViewModel.RegisterViewModel;
+
+<div class="accordion-body" style="margin-top: 100px">
+    <form method="post" class="accordion-header">
+        <div class="accordion-item">
+            <label asp-for="UserName" class="accordion-item"></label>
+            <input placeholder="Имя пользователя" class="accordion-item" asp-for="UserName" />
+            <span asp-validation-for="UserName" class="text-danger accordion-flush"></span>
+            
+        </div>
+        <div class="accordion-item">
+            <label asp-for="Password" class="accordion-item"></label>
+            <input placeholder="Пароль" class="accordion-item" asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger accordion-flush"></span>
+        </div>
+
+        <div class="accordion-">
+            <label asp-for="PasswordConfirm" class="accordion-item"></label>
+            <input placeholder="Подтверждение пароля" class="accordion-item" asp-for="PasswordConfirm" />
+            <span asp-validation-for="PasswordConfirm" class="text-danger accordion-flush"></span>
+        </div>
+        <button asp-action="Register" class="accordion-item" type="submit">Отправить</button>
+    </form>
+</div>

@@ -9,7 +9,7 @@
     <!-- Задаем название страницы, "Title" будет заменен на значение из ViewData -->
     <title>@ViewData["Title"]</title>
     <!-- Подключаем минифицированную версию Bootstrap для стилей -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <!-- Подключаем файл стилей site.css для кастомизации дизайна страницы -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <!-- Подключаем файл стилей LibraryRequiem.styles.css для кастомизации дизайна страницы; используем версионирование для кэширования -->
@@ -46,6 +46,29 @@
                     </div>
                 </li>
             </ul>
+                <div class="list-group">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <button data-modal-button class="list-group-item ">Войти</button>
+                    <div class="modal-body position-absolute" style="bottom: 0; top: 0;">
+                        <form method="post" asp-controller="Accounts" asp-action="Login">
+                            <div class="modal-content">
+                                <label class="modal-header">Вход в аккаунт</label>
+                                <input class="modal-static" name="UserName" placeholder="Имя пользователя"/>
+                                <input class="modal-static" name="Password" placeholder="Пароль" />
+                                <button type="submit" data-close-modal >Войти</button>
+                            </div>
+                        </form>
+                    </div>
+                }
+                
+                else
+                {
+                    <button data-modal-button class="list-group-item">
+                        <a asp-action="Index" asp-controller="Accounts" style="text-decoration:none; color: black">@User.Identity.Name</a>
+                    </button>
+                }
+                </div>
             <!-- Форма поиска -->
             <form method="post" asp-controller="Collection" asp-action="SearchResult">
                 <div class="search">

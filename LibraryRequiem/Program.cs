@@ -8,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CollectionContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("CollectionContext")));
+builder.Services.AddAuthentication()
+    .AddCookie(options =>
+    {
+        options.LoginPath = new PathString("/Accounts/Login");
+        options.AccessDeniedPath = new PathString("/Accounts/Login");
+    });
 builder.Services.Configure<FormOptions>(opt => 
 { 
     opt.ValueCountLimit = int.MaxValue;
@@ -26,12 +32,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//app.UseAuthentication();
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

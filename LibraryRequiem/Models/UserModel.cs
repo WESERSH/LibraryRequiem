@@ -6,12 +6,14 @@ namespace LibraryRequiem.Models
     {
         public int Id { get; set; }
 
-
         [DisplayName("Имя пользователя")]
         public string UserName { get; set; }
 
         [DisplayName("Пароль")]
         public string Password { get; set; }
-        public LikedBookModel LikedBook { get; set; }
+
+        public string? Role { get; set; }
+
+        //public ProfileModel Profile { get; set; }
     }
 }

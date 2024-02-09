@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryRequiem.Migrations
 {
     [DbContext(typeof(CollectionContext))]
-    [Migration("20240205021446_Users")]
-    partial class Users
+    [Migration("20240209023757_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,7 +75,29 @@ namespace LibraryRequiem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LikedBookModel");
+                    b.ToTable("LikedBook");
+                });
+
+            modelBuilder.Entity("LibraryRequiem.Models.ProfileModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("AccountIcon")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("likedBooksId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("likedBooksId");
+
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("LibraryRequiem.Models.UserModel", b =>
@@ -86,11 +108,11 @@ namespace LibraryRequiem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("LikedBookId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -99,20 +121,18 @@ namespace LibraryRequiem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LikedBookId");
-
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("LibraryRequiem.Models.UserModel", b =>
+            modelBuilder.Entity("LibraryRequiem.Models.ProfileModel", b =>
                 {
-                    b.HasOne("LibraryRequiem.Models.LikedBookModel", "LikedBook")
+                    b.HasOne("LibraryRequiem.Models.LikedBookModel", "likedBooks")
                         .WithMany()
-                        .HasForeignKey("LikedBookId")
+                        .HasForeignKey("likedBooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LikedBook");
+                    b.Navigation("likedBooks");
                 });
 #pragma warning restore 612, 618
         }
