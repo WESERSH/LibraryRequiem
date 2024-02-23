@@ -1,0 +1,61 @@
+﻿@model LibraryRequiem.Models.ViewModel.ProfileViewModel
+@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = @Model.ProfileName;
+}
+<div class="container-xl">
+    <div style="padding-top:150px; background-color: #f2c288;" class="row align-items-center justify-content-between">
+        <div class="col-md">
+            <div class="container">
+                <h2>Избранное</h2>
+                <div class="cards" style="margin-top: -120px">
+                    @if(Model.Books != null)
+                    {
+                        @foreach (var item in Model.Books)
+                        {
+                            if (item != null)
+                            {
+                                <!-- Карта книги -->
+                                <div class="card">
+                                    <div class="card_top">
+                                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на её изображение -->
+                                        <a class="card_image" asp-action="Details" asp-controller="Collection" asp-route-id="@item.Id"><img src="@item.BookImagePath"></a>
+                                    </div>
+                                    <div style="padding-top: 5px;" class="card_bottom">
+                                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на название -->
+                                        <a class="card_title" asp-action="Details" asp-controller="Collection" asp-route-id="@item.Id">@item.Title</a>
+                                        <div class="buttons">
+                                            <form class="author" method="post" asp-action="SearchResult" asp-controller="Collection">
+                                                <!-- В Post запросе в действие SearchResult передается имя автора, при нажатии на него -->
+                                                <button class="author_text" value="@item.Author" name="searchitem">@item.Author</button>
+                                            </form>
+                                            <!-- Задается действие перехода на страницу с информацией о книге, при клике на кнопку -->
+                                            <button class="detail-button">
+                                                <a class="text" asp-action="Details" asp-controller="Collection" asp-route-id="@item.Id">Подробнее</a>
+                                            </button>
+                                            <!-- Кнопка скачивания, передаёт в метод Download Id книги -->
+                                            <button class="download-button">
+                                                <a class="text" asp-action="Download" asp-controller="Collection" asp-route-id="@item.Id">Скачать</a>
+                                            </button>
+                                            <button class="read-button">
+                                                <a class="text" asp-action="ReadPage" asp-controller="Collection" asp-route-id="@item.Id">Читать</a>
+                                            </button>
+                                            <form method="post" asp-action="DeleteTitle" asp-controller="FavoriteList">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type = "submit" class="read-button" style="border:solid; display:flex; max-width: 300px; max-height:25px;">
+                                                    <span style="font-size: 14px;">Удалить из избранного</span>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

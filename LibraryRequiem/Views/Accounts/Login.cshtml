@@ -1,0 +1,18 @@
+﻿@model LibraryRequiem.Models.ViewModel.LoginViewModel
+<div class="accordion-body" style="margin-top: 100px">
+    <form method="post" class="accordion-header">
+        <div class="accordion-item">
+            <div asp-validation-summary="ModelOnly" class="text-danger accordion-flush"></div>
+            <label asp-for="UserNameNew" class="accordion-item"></label>
+            <input placeholder="Имя пользователя" class="accordion-item" asp-for="UserNameNew" />
+            <span asp-validation-for="UserNameNew" class="text-danger accordion-flush"></span>
+        </div>
+        <div class="accordion-item">
+            <label asp-for="PasswordNew" class="accordion-item"></label>
+            <input placeholder="Пароль" class="accordion-item" asp-for="PasswordNew" />
+            <span asp-validation-for="PasswordNew" class="text-danger accordion-flush"></span>
+        </div>
+        <button asp-action="Login" asp-controller="Accounts" class="accordion-item" type="submit">Отправить</button>
+        <button asp-action="Register" asp-controller="Accounts" class="accordion-item" type="submit">Регистрация</button>
+    </form>
+</div>

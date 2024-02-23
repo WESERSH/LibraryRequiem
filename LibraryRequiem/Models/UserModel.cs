@@ -4,16 +4,21 @@ namespace LibraryRequiem.Models
 {
     public class UserModel
     {
-        public int Id { get; set; }
+        public int Id { get; set; } // Идентификатор пользователя
 
         [DisplayName("Имя пользователя")]
-        public string UserName { get; set; }
+        public string UserName { get; set; } // Имя пользователя
 
         [DisplayName("Пароль")]
-        public string Password { get; set; }
+        public string Password { get; set; } // Пароль пользователя
 
-        public string? Role { get; set; }
+        // Роль пользователя
+        public string Role { get; set; }
 
-        //public ProfileModel Profile { get; set; }
+        // Список избранных книг пользователя (связь с моделью FavoriteListModel)
+        public virtual FavoriteListModel FavoriteList { get; set; }
+
+        // Профиль пользователя (связь с моделью ProfileModel)
+        public ProfileModel Profile { get; set; }
     }
 }

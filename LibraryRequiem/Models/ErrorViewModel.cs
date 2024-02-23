@@ -1,4 +1,4 @@
-namespace LibraryRequiem.Models
+﻿namespace LibraryRequiem.Models
 {
     public class ErrorViewModel
     {

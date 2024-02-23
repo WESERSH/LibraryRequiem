@@ -1,0 +1,30 @@
+﻿.modal-login {
+    visibility: hidden;
+    display:flex;
+    position:relative;
+}
+
+.modal-login:target{
+    visibility:visible;
+}
+
+
+.modal-content{
+    position:relative;
+    display: flex;
+    margin: 1000px, 0px, 0px, 100px;
+}
+.right-header{
+    position:relative;
+    display: flex;
+    justify-items: end;
+    padding-right: 100px;
+}
+
+.fade{
+    display: none;
+}
+
+.show{
+    display;
+}

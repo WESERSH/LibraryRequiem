@@ -1,5 +1,5 @@
 ﻿<!-- Передаем в представление коллекцию объектов BookModel -->
-@model IEnumerable<LibraryRequiem.Models.BookModel>
+@model LibraryRequiem.Models.ViewModel.CollectionIndexViewModel
 
 @{
     <!-- Описываем заголовок отображаемый в окне браузера -->
@@ -8,48 +8,59 @@
 <!-- Контейнер страницы -->
 <div class="collection_container">
     <!-- Кнопка перенаправляющая пользователя на сраницу создания книги, действие Create -->
-    <button class="create_button">
-        <a asp-action="Create" asp-controller="Collection" class="create">
-            Добавить
-        </a>
-    </button>
+    @if (User.IsInRole("admin"))
+    {
+        <button class="create_button">
+            <a asp-action="Create" asp-controller="Collection" class="create">
+                Добавить
+            </a>
+        </button>
+    }
     <!-- Ссылка на сайт где можно скачать программу для чтения -->
     <label class="calibre_label">Скачать программу для чтения <a class="calibre_href" href="https://calibre-ebook.com/ru/download_windows"> "Calibre" </a> с оффициального сайта</label>
     <!-- Сетка с картами книг -->
     <div class="cards">
         <!-- Перебор каждого экземпляра книги в модели -->
-        @foreach (var item in Model)
+        @if (Model != null)
         {
-            <!-- Карта книги -->
-            <div class="card">
-                <div class="card_top">
-                    <!-- Задается действие перехода на страницу с информацией о книге, при клике на её изображение -->
-                    <a class="card_image" asp-action="Details" asp-route-id="@item.Id"><img src="@item.BookImagePath"></a>
-                </div>
-                <div class="card_bottom">
-                    <!-- Задается действие перехода на страницу с информацией о книге, при клике на название -->
-                    <a  class="card_title" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
-                    <form class="author" method="post" asp-action="SearchResult" asp-controller="Collection">
-                        <!-- В Post запросе в действие SearchResult передается имя автора, при нажатии на него -->
-                        <button class="author_text" value="@item.Author" name="searchitem">@item.Author</button>
-                    </form>
-                    <div class="buttons">
-                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на кнопку -->
-                        <button class="detail-button">
-                            <a class="text" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
-                        </button>
-                        <!-- Кнопка скачивания, передаёт в метод Download Id книги -->
-                        <button class="download-button">
-                            <a class="text" asp-action="Download" asp-route-id="@item.Id">Скачать</a>
-                            <a class="text" asp-action="ReadPage" asp-route-id="@item.Id">Читать</a>
-                        </button>
-                        <button class="read-button">
-                            <a class="text" asp-action="ReadPage" asp-route-id="@item.Id">Читать</a>
-                        </button>
+            foreach (var item in Model.Books)
+            {
+                <!-- Карта книги -->
+                <div class="card">
+                    <div class="card_top">
+                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на её изображение -->
+                        <a class="card_image" asp-action="Details" asp-controller="Collection" asp-route-id="@item.Id"><img src="@item.BookImagePath"></a>
                     </div>
-                
+                    <div class="card_bottom">
+                        <!-- Задается действие перехода на страницу с информацией о книге, при клике на название -->
+                        <a class="card_title" asp-action="Details" asp-controller="Collection" asp-route-id="@item.Id">@item.Title</a>
+                        <div class="buttons">
+                            <form class="author" method="post" asp-action="SearchResult" asp-controller="Collection">
+                                <!-- В Post запросе в действие SearchResult передается имя автора, при нажатии на него -->
+                                <button class="author_text" value="@item.Author" name="searchitem">@item.Author</button>
+                            </form>
+                            <!-- Задается действие перехода на страницу с информацией о книге, при клике на кнопку -->
+                            <button class="detail-button">
+                                <a class="text" asp-action="Details" asp-controller="Collection" asp-route-id="@item.Id">Подробнее</a>
+                            </button>
+                            <!-- Кнопка скачивания, передаёт в метод Download Id книги -->
+                            <button class="download-button">
+                                <a class="text" asp-action="Download" asp-controller="Collection" asp-route-id="@item.Id">Скачать</a>
+                            </button>
+                            <button class="read-button">
+                                <a class="text" asp-action="ReadPage" asp-controller="Collection" asp-route-id="@item.Id">Читать</a>
+                            </button>
+                            @if (Model.User != null)
+                            {
+                                <button type="submit" class="read-button">
+                                    <a class="text" href="/FavoriteList/AddTitle?id=@item.Id&currentPage=@Context.Request.HttpContext.Request.Path">В избранное</a>
+                                </button>
+                            }
+                        </div>
+
+                    </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>

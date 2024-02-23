@@ -10,29 +10,33 @@ namespace LibraryRequiem.Models
 {
     public class BookModel
     {
-        public int Id { get; set; }
+        public int Id { get; set; } // Идентификатор книги
 
+        [MaxLength(100)]
         [DisplayName("Название")]
-        public string? Title { get; set; }
+        public string? Title { get; set; } // Название книги
 
+        [MaxLength(50)]
         [DisplayName("Автор")]
-        public string? Author { get; set; }
+        public string? Author { get; set; } // Автор книги
 
         [DisplayName("Жанры")]
-        public string? Genre { get; set; }
-
+        public string? Genre { get; set; } // Жанры книги
+        [MaxLength (500)]
         [DisplayName("Описание")]
-        public string? Description { get; set; }
+        public string? Description { get; set; } // Описание книги
 
         [DisplayName("Дата загрузки")]
-        public DateTime DateOfUpload { get; set; }
+        public DateTime DateOfUpload { get; set; } // Дата загрузки книги
 
         [DisplayName("Тэги")]
-        public string? Tags { get; set; }
+        public string? Tags { get; set; } // Теги книги
 
+        // Путь к файлу книги в формате .fb2
         [DisplayName("Файл книги(.fb2)")]
         public string? BookFilePath { get; set; }
 
+        // Путь к изображению обложки книги в форматах .jpg или .png
         [DisplayName("Обложка(.jpg, .png)")]
         public string? BookImagePath { get; set; }
     }

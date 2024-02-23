@@ -7,6 +7,7 @@ using NuGet.Packaging;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
+using LibraryRequiem.Models.ViewModel;
 
 namespace LibraryRequiem.Controllers
 {
@@ -47,14 +48,29 @@ namespace LibraryRequiem.Controllers
             if (!_context.Books.IsNullOrEmpty())
             {
                 var NewBooks = await _context.Books.ToListAsync();
+                var viewModel = new CollectionIndexViewModel();
 
                 //Сортировка объектов бд по дате добавления
                 NewBooks.Sort((x,y) => x.DateOfUpload.Date.CompareTo(y.DateOfUpload.Date));
 
                 //Выборка последних 4х элементов
-                var firstThreeEllements = NewBooks.TakeLast(4).Reverse();
+                var firstFourEllements = NewBooks.TakeLast(4).Reverse().ToList();
 
-                return View(firstThreeEllements);
+                if (User.Identity.IsAuthenticated)
+                {
+                    UserModel user = await _context.Users.Include(x => x.FavoriteList.Books)
+                    .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+                    viewModel.User = user;
+                    viewModel.Books = firstFourEllements;
+
+                    return View(viewModel);
+                }
+
+                viewModel.User = null;
+                viewModel.Books = firstFourEllements;
+
+                return View(viewModel);
             }
 
             return View();

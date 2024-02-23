@@ -7,10 +7,10 @@ namespace LibraryRequiem.Models.ViewModel
     {
         [DisplayName("Имя пользователя")]
         [Required(ErrorMessage = "Введите имя пользователя!")]
-        public string UserName { get; set; }
+        public string? UserNameNew { get; set; }
 
         [DisplayName("Пароль")]
         [Required(ErrorMessage = "Введите пароль!")]
-        public string Password { get; set; }
+        public string? PasswordNew { get; set; }
     }
 }

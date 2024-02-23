@@ -1,11 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    <!-- Описываем заголовок отображаемый в окне браузера -->
+    ViewData["Title"] = "Регистрация";
+}
 @model LibraryRequiem.Models.ViewModel.RegisterViewModel;
 
 <div class="accordion-body" style="margin-top: 100px">
     <form method="post" class="accordion-header">
         <div class="accordion-item">
+            <div asp-validation-summary="ModelOnly" class="text-danger accordion-flush"></div>
             <label asp-for="UserName" class="accordion-item"></label>
             <input placeholder="Имя пользователя" class="accordion-item" asp-for="UserName" />
             <span asp-validation-for="UserName" class="text-danger accordion-flush"></span>

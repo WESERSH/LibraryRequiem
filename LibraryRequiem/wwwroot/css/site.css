@@ -219,14 +219,17 @@ body {
 .card_title:hover {
     color: white;
 }
-.buttons{
-    position:absolute;
+.buttons {
+    position: absolute;
     bottom: 10px;
-    display: table-cell;
+    display: flex;
     width: 86%;
     font-size: 17px;
     text-align: center;
     margin: 0px 0px 0px 0px;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    height: 110px;
 }
 .cards {
     padding-top: 150px;
@@ -274,10 +277,8 @@ body {
     border: 0;
 }
 .author{
-    position:absolute;
     bottom: 40px;
     left: 18px;
-    display: flex;
 }
 .author button{
     background-color: #f2d785

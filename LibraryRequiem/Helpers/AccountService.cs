@@ -33,13 +33,13 @@ namespace LibraryRequiem.Helpers
 
             try
             {
-                var user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
+                var user = _context.Users.FirstOrDefault(x => x.UserName == model.UserNameNew);
 
                 if (user == null)
                 {
                     return null;
                 }
-                if (user.Password != HashPasswordHelper.HashPassword(model.Password))
+                if (user.Password != HashPasswordHelper.HashPassword(model.PasswordNew))
                 {
                     return null;
                 }

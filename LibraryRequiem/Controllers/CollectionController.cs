@@ -15,6 +15,9 @@ using static System.Collections.Specialized.BitVector32;
 using Microsoft.Identity.Client;
 using System.Xml.XPath;
 using System.Security.Cryptography.Pkcs;
+using Microsoft.AspNetCore.Authorization;
+using LibraryRequiem.Models.ViewModel;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LibraryRequiem.Controllers
 {
@@ -23,12 +26,14 @@ namespace LibraryRequiem.Controllers
         //Создание переменных для информации об окружении веб-приложения и контекста базы данных
         private readonly CollectionContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IDbContextFactory<CollectionContext> _dbContextFactory;
 
         //Инициализация этих переменных
-        public CollectionController(CollectionContext context, IWebHostEnvironment webHostEnvironment)
+        public CollectionController(CollectionContext context, IWebHostEnvironment webHostEnvironment, IDbContextFactory<CollectionContext> dbContextFactory)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _dbContextFactory = dbContextFactory;
         }
 
         //Переопределение метода OnActionExecuting
@@ -50,9 +55,31 @@ namespace LibraryRequiem.Controllers
         // GET: Collection
         public async Task<IActionResult> Index()
         {
+            var books = await _context.Books.ToListAsync();
+            var viewModel = new CollectionIndexViewModel();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                using(var context = _dbContextFactory.CreateDbContext())
+                {
+                    UserModel user = new UserModel();
+
+                    user = await context.Users.Include(x => x.FavoriteList.Books)
+                .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+                    viewModel.User = user;
+                    viewModel.Books = books;
+
+                }
+
+                return View(viewModel);
+            }
+
+            viewModel.User = null;
+            viewModel.Books = books;
             //Возврат объектов бд в виде списка
             return _context.Books != null ? 
-                          View(await _context.Books.ToListAsync()) :
+                          View(viewModel) :
                           Problem("Entity set 'CollectionContext.Books'  is null.");
         }
 
@@ -67,7 +94,7 @@ namespace LibraryRequiem.Controllers
             try
             {
                 //Проверка id и бд на null и возврат NotFound
-                var bookModel = await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
+                var bookModel = await _context.Books.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 //Создание пути к загружакмому файлу
                 var pathToDownload = Path.GetFullPath($@"{_webHostEnvironment.WebRootPath}{bookModel.BookFilePath}");
@@ -87,28 +114,71 @@ namespace LibraryRequiem.Controllers
         //GET:
         public async Task<IActionResult> SearchResult(string? searchitem, string? searchGenre)
         {
+            var books = _context.Books.AsNoTracking();
+            var viewModel = new CollectionIndexViewModel();
+
             //Проверка поля поискового запроса на null
             if (searchitem != null)
             {
                 //Фильтрация объектов бд и помещение в searchResult
-                var searchResult = _context.Books.Where(p => EF.Functions.Like(p.Title, $"%{searchitem}%") || EF.Functions.Like(p.Author, $"%{searchitem}%")).ToListAsync();
+                var searchResult = books.Where(p => EF.Functions.Like(p.Title, $"%{searchitem}%") || EF.Functions.Like(p.Author, $"%{searchitem}%")).ToListAsync();
 
                 ViewBag.Search = $"Поиск по запросу: {searchitem}";
 
                 ViewBag.SearchField = searchitem;
 
-                return View(await searchResult);
+                if (User.Identity.IsAuthenticated)
+                {
+                    using (var context = _dbContextFactory.CreateDbContext())
+                    {
+                        UserModel user = new UserModel();
+
+                        user = await context.Users.Include(x => x.FavoriteList.Books)
+                    .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+                        viewModel.User = user;
+                        viewModel.Books = await searchResult;
+
+                    }
+
+                    return View(viewModel);
+                }
+
+                viewModel.User = null;
+                viewModel.Books = await searchResult;
+
+                return View(viewModel);
             }
 
             //Проверка поля поискового запроса на null
             else if (searchGenre != null)
             {
                 //Фильтрация объектов бд и помещение в searchResult
-                var searchResult = _context.Books.Where(p => EF.Functions.Like(p.Genre, $"%{searchGenre}%")).ToListAsync();
+                var searchResult = books.Where(p => EF.Functions.Like(p.Genre, $"%{searchGenre}%")).ToListAsync();
 
                 ViewBag.Search = $"Книги жанра: {searchGenre}";
 
-                return View(await searchResult);
+                if (User.Identity.IsAuthenticated)
+                {
+                    using (var context = _dbContextFactory.CreateDbContext())
+                    {
+                        UserModel user = new UserModel();
+
+                        user = await context.Users.Include(x => x.FavoriteList.Books)
+                    .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+                        viewModel.User = user;
+                        viewModel.Books = await searchResult;
+
+                    }
+
+                    return View(viewModel);
+                }
+
+                viewModel.User = null;
+                viewModel.Books = await searchResult;
+
+                return View(viewModel);
             }
 
             return View();
@@ -135,8 +205,17 @@ namespace LibraryRequiem.Controllers
         }
 
         // GET: Collection/Create
+
+
+        [Authorize]
+        [AllowAnonymous]
         public IActionResult Create()
         {
+            if (!User.IsInRole("admin"))
+            {
+                ModelState.AddModelError("", "Вы не админ!!!");
+                return PartialView("../Accounts/login");
+            };
 
             return View();
         }
@@ -144,47 +223,49 @@ namespace LibraryRequiem.Controllers
         // POST: Collection/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
         [ValidateAntiForgeryToken]
         [RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue)]
         [RequestSizeLimit(int.MaxValue)]
         [HttpPost]
+        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Create(IFormFile bookImage, IFormFile bookFile, [Bind("Id,Title,Author,Genre,Description,DateOfUpload,Tags")] BookModel bookModel)
         {
-            //Создание путей к обложке книги и её файлу
+            // Создание путей к обложке книги и ее файлу
             bookModel.BookFilePath = @$"/Files/Book{bookModel.Id}/{bookFile.FileName}";
             bookModel.BookImagePath = @$"/Files/Book{bookModel.Id}/{bookImage.FileName}";
 
-            //Добавление модели в бд
+            // Добавление модели в базу данных
             _context.Add(bookModel);
             await _context.SaveChangesAsync();
 
-            //Создание путей в файловой системе для обложке книги и её файла
+            // Создание путей в файловой системе для обложки книги и ее файла
             var pathToSaveImage = Path.GetFullPath(@$".\wwwroot\Files\Book{bookModel.Id}\{bookImage.FileName}");
             var pathToSaveFile = Path.GetFullPath($@".\wwwroot\Files\Book{bookModel.Id}\{bookFile.FileName}");
 
-            //Заполнение полей модели значениями
+            // Заполнение полей модели значениями
             bookModel.BookFilePath = @$"/Files/Book{bookModel.Id}/{bookFile.FileName}";
             bookModel.BookImagePath = @$"/Files/Book{bookModel.Id}/{bookImage.FileName}";
             bookModel.Id = bookModel.Id;
             bookModel.DateOfUpload = DateTime.Now;
 
-            //Проверка формата файла книги
-           /* if (Path.GetExtension(bookFile.FileName) != ".fb2")
+            // Проверка формата файла книги
+            if (Path.GetExtension(bookFile.FileName) != ".fb2" && Path.GetExtension(pathToSaveFile) != ".fb2")
             {
                 ModelState.AddModelError("BookFilePath", "Неверный формат книги");
-            }*/
+            }
 
-            //Проверка формата обложки книги
+            // Проверка формата обложки книги
             if (Path.GetExtension(bookImage.FileName) != ".jpg" && Path.GetExtension(pathToSaveImage) != ".png")
             {
                 ModelState.AddModelError("BookImagePath", "Неверный формат изображения");
             }
 
-            //Получение информации о директории
+            // Получение информации о директории
             DirectoryInfo directoryInfo = new DirectoryInfo($@"{_webHostEnvironment.WebRootPath}\Files\Book{bookModel.Id}\");
 
-            //Проверка на правильность заполненных форм, сохранение изменений в бд и добавление файлов в файловую систему
+            // Проверка на правильность заполненных форм, сохранение изменений в базе данных и добавление файлов в файловую систему
             if (ModelState.IsValid)
             {
                 directoryInfo.Create();
@@ -203,15 +284,24 @@ namespace LibraryRequiem.Controllers
                 return RedirectToAction("Index");
             }
 
-            //Удаление объекта из бд в случае неправильного его заполнения
+            // Удаление объекта из базы данных в случае неправильного его заполнения
             _context.Books.Remove(bookModel);
             await _context.SaveChangesAsync();
             return View(bookModel);
         }
 
         // GET: Collection/Edit/5
+
+        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!User.IsInRole("admin"))
+            {
+                ModelState.AddModelError("", "Вы не админ!!!");
+                return PartialView("../Accounts/login");
+            };
+
             //Проверка id и бд на null и возврат NotFound
             if (id == null || _context.Books == null)
             {
@@ -339,6 +429,16 @@ namespace LibraryRequiem.Controllers
 
                 //Удаление записи из бд
                 _context.Books.Remove(bookModel);
+
+                var favotitLists = _context.FavoriteLists.Include(x => x.Books);
+                foreach( var favotitList in favotitLists)
+                {
+                    if (favotitList.Books != null)
+                    {
+                        var bookToDelete = favotitList.Books.FirstOrDefault(x => x.BookId == id);
+                        favotitList.Books.Remove(bookToDelete);
+                    }
+                }
             }
 
             //Сохранение изменений
