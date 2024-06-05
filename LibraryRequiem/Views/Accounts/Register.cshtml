@@ -4,26 +4,84 @@
 }
 @model LibraryRequiem.Models.ViewModel.RegisterViewModel;
 
-<div class="accordion-body" style="margin-top: 100px">
-    <form method="post" class="accordion-header">
-        <div class="accordion-item">
-            <div asp-validation-summary="ModelOnly" class="text-danger accordion-flush"></div>
-            <label asp-for="UserName" class="accordion-item"></label>
-            <input placeholder="Имя пользователя" class="accordion-item" asp-for="UserName" />
-            <span asp-validation-for="UserName" class="text-danger accordion-flush"></span>
-            
+<div class="login_wrapper">
+    <form method="post" class="login_container" id="login_form">
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div id="login_error_messages" class="text-danger accordion-flush"></div>
+            <div class="login_login">
+                <label asp-for="UserName" class="login_label"></label>
+                <input id="name" placeholder="Имя пользователя" class="login_input" asp-for="UserName" />
+                <span asp-validation-for="UserName" class="text-danger login_danger"></span>
+            </div>
+            <div class="login_password">
+                <label asp-for="Password" class="login_label"></label>
+                <input id="password" placeholder="Пароль" class="login_input" asp-for="Password" />
+                <span asp-validation-for="Password" class="text-danger login_danger"></span>
+            </div>
+            <div class="login_password">
+                <label asp-for="PasswordConfirm" class="login_label"></label>
+                <input id="password_confirm" placeholder="Подтверждение пароля" class="login_input" asp-for="PasswordConfirm" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger login_danger"></span>
+            </div>
         </div>
-        <div class="accordion-item">
-            <label asp-for="Password" class="accordion-item"></label>
-            <input placeholder="Пароль" class="accordion-item" asp-for="Password" />
-            <span asp-validation-for="Password" class="text-danger accordion-flush"></span>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button id="uniqid" class="login_login_button" type="submit">Регистрация</button>
         </div>
-
-        <div class="accordion-">
-            <label asp-for="PasswordConfirm" class="accordion-item"></label>
-            <input placeholder="Подтверждение пароля" class="accordion-item" asp-for="PasswordConfirm" />
-            <span asp-validation-for="PasswordConfirm" class="text-danger accordion-flush"></span>
-        </div>
-        <button asp-action="Register" class="accordion-item" type="submit">Отправить</button>
     </form>
 </div>
+
+<script>
+
+    $('.login_wrapper').on('dblclick', function (e) {
+        if (e.target.classList[0].includes('login_wrapper')) {
+
+            $('.login_wrapper').removeClass('show');
+
+            console.log("дабл клик");
+
+        };
+    });
+
+    $('#login_form').on('submit', function (e) {
+
+        e.preventDefault();
+
+        var RegisterView = {
+            UserName: $('#name').val(),
+            Password: $('#password').val(),
+            PasswordConfirm: $('#password_confirm').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("Register", "Accounts")',
+            method: "POST",
+            headers: {
+                'RequestVerificationToken': $('[name=__RequestVerificationToken').val()
+            },
+            contentType: 'application/json', // Установка заголовка Content-Type как application/json
+            data: JSON.stringify(RegisterView), // Сериализация данных в JSON 
+            success: function (data) {
+
+                location.reload(true);
+
+            },
+
+            error: function (data) {
+
+                if (data.status == 400) {
+                    var errors = data.responseJSON;
+                    $('#login_error_messages').empty();
+                    $.each(errors, function (key, value) {
+                        $.each(value, function (index, value){
+                            $('#login_error_messages').append('<div class="text-danger accordion-flush">' + value + '</div>');
+                        });
+                        
+                    });
+
+                    console.log(errors);
+                }
+            }
+
+        });
+    });
+</script>

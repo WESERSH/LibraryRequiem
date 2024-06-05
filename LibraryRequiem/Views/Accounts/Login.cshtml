@@ -1,18 +1,91 @@
-﻿@model LibraryRequiem.Models.ViewModel.LoginViewModel
-<div class="accordion-body" style="margin-top: 100px">
-    <form method="post" class="accordion-header">
-        <div class="accordion-item">
-            <div asp-validation-summary="ModelOnly" class="text-danger accordion-flush"></div>
-            <label asp-for="UserNameNew" class="accordion-item"></label>
-            <input placeholder="Имя пользователя" class="accordion-item" asp-for="UserNameNew" />
-            <span asp-validation-for="UserNameNew" class="text-danger accordion-flush"></span>
+﻿ @model LibraryRequiem.Models.ViewModel.LoginViewModel
+<div class="login_wrapper">
+    <form method="post" class="login_container" id="login_form">
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div id="login_error_messages" class="text-danger accordion-flush"></div>
+            <div class="login_login">
+                <label asp-for="UserNameNew" class="login_label"></label>
+                <input id="name" placeholder="Имя пользователя" class="login_input" asp-for="UserNameNew" />
+                <span asp-validation-for="UserNameNew" class="text-danger login_danger"></span>
+            </div>
+            <div class="login_password">
+                <label asp-for="PasswordNew" class="login_label"></label>
+                <input id="password" placeholder="Пароль" class="login_input" asp-for="PasswordNew" />
+                <span asp-validation-for="PasswordNew" class="text-danger login_danger"></span>
+            </div>
         </div>
-        <div class="accordion-item">
-            <label asp-for="PasswordNew" class="accordion-item"></label>
-            <input placeholder="Пароль" class="accordion-item" asp-for="PasswordNew" />
-            <span asp-validation-for="PasswordNew" class="text-danger accordion-flush"></span>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button class="login_login_button" type="submit">Войти</button>
+            <button id="login_reg_button" class="login_reg_button">Регистрация</button>
         </div>
-        <button asp-action="Login" asp-controller="Accounts" class="accordion-item" type="submit">Отправить</button>
-        <button asp-action="Register" asp-controller="Accounts" class="accordion-item" type="submit">Регистрация</button>
     </form>
 </div>
+
+<script>
+
+    $('.login_wrapper').on('dblclick', function (e) {
+        if (e.target.classList[0].includes('login_wrapper')) {
+
+            $('.login_wrapper').removeClass('show');
+
+            console.log("дабл клик");
+
+        };
+    });
+
+    $('#login_form').on('submit', function (e) {
+
+        e.preventDefault();
+
+        var LoginView = {
+            UserNameNew: $('#name').val(),
+            PasswordNew: $('#password').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("Login", "Accounts")',
+            method: "POST",
+            contentType: 'application/json', // Установка заголовка Content-Type как application/json
+            data: JSON.stringify(LoginView), // Сериализация данных в JSON 
+            headers: {
+                'RequestVerificationToken': $('[name=__RequestVerificationToken').val()
+            },
+            success: function (data) {
+
+                location.reload(true);
+
+            },
+
+            error: function (data) {
+
+                if (data.status == 400) {
+                    var errors = data.responseJSON;
+                    $.each(errors, function (key, value) {
+                        $('#login_error_messages').html(value);
+                    });
+
+                    console.log(errors);
+                }
+            }
+
+        });
+    });
+
+    $('#login_reg_button').on('click', function (e) {
+
+        e.preventDefault();
+
+        console.log("клик");
+
+        $.ajax({
+            url: '@Url.Action("Register", "Accounts")',
+            method: "GET",
+            success: function (data) {
+                $('forAjax').html(data);
+                $('.login_wrapper').addClass('show');
+            }
+        });
+
+    });
+
+</script>

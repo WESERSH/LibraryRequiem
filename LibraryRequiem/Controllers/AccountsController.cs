@@ -31,13 +31,13 @@ namespace LibraryRequiem.Controllers
 
         public ActionResult Register()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: AccountController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel? model)
+        public async Task<ActionResult> Register([FromBody] RegisterViewModel? model)
         {
             // Проверка модели на валидность
             if (ModelState.IsValid)
@@ -49,7 +49,7 @@ namespace LibraryRequiem.Controllers
                 if (user != null)
                 {
                     ModelState.AddModelError("", "Пользователь с данным именем уже существует!!!");
-                    return View();
+                    return BadRequest(ModelState);
                 }
 
                 // Создание нового пользователя
@@ -59,7 +59,7 @@ namespace LibraryRequiem.Controllers
                     UserName = model.UserName,
 
                     // Роль пользователя
-                    Role = "user",
+                    Role = "",
 
                     // Зашифрованный пароль
                     Password = HashPasswordHelper.HashPassword(model.Password)
@@ -117,7 +117,7 @@ namespace LibraryRequiem.Controllers
                 }
 
             }
-            return View(model);
+            return BadRequest(ModelState);
         }
 
         public ActionResult Login()
@@ -127,15 +127,14 @@ namespace LibraryRequiem.Controllers
         }
 
         // POST: AccountController/Edit/5
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model)
-        {
+        [HttpPost]
+        public async Task<ActionResult> Login([FromBody] LoginViewModel LoginView) {
             // Проверка модели на валидность
             if (ModelState.IsValid)
             {
                 // Попытка входа в систему с использованием сервиса аутентификации
-                var result = new AccountService(_context).Login(model);
+                var result = new AccountService(_context).Login(LoginView);
 
                 // Если вход в систему не удался, добавляем ошибку в модель
                 if (result == null)
@@ -143,7 +142,7 @@ namespace LibraryRequiem.Controllers
                     ModelState.AddModelError("", "Неверный логин или пароль");
 
                     // Возвращаем частичное представление формы входа
-                    return PartialView();
+                    return BadRequest(ModelState);
                 }
 
                 // Авторизация пользователя с использованием схемы аутентификации по кукам
@@ -153,8 +152,10 @@ namespace LibraryRequiem.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            ModelState.AddModelError("", "Ошибка при заполнении данных");
+
             // Возвращаем частичное представление формы входа в случае невалидной модели
-            return PartialView("../Accounts/Login");
+            return BadRequest(ModelState );
         }
 
         public ActionResult Logout(int id)

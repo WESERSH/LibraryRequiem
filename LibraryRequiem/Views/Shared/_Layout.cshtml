@@ -17,10 +17,14 @@
     <link rel="stylesheet" href="~/css/ModalLogin.css" asp-append-version="true"/>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js"></script>
 </head>
 <body>
     <!-- Шапка сайта, содержит навигационное меню -->
     <header>
+        <forAjax>
+
+        </forAjax>
         <!-- Основная навигационная панель -->
         <nav class="navbar">
             <!-- Контейнер для логотипа -->
@@ -49,6 +53,7 @@
                     </div>
                 </li>
             </ul>
+
             <div class="right-header">
                 <!-- Форма поиска -->
                 <form method="post" asp-controller="Collection" asp-action="SearchResult">
@@ -60,14 +65,9 @@
                 </form>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a style="color:black; text-decoration:none" id = "modal-button" href="/Accounts/Login">
-                        <button class="modal-button">
+                    <button class="login_window_button">
                             Войти
-                        </button>
-                    </a>
-                    <div id="modDialog" class="modal fade">
-                        <div id="dialogContent" class="modal-dialog" style="pointer-events:unset;"></div>
-                    </div>
+                    </button>
                 }
 
                 else
@@ -116,21 +116,13 @@
 
         <script>
 
-            $(function (){
-
-                $.ajaxSetup({cache: false});
-
-                $("#modal-button").click(function(e){
-
-                    e.preventDefault();
-
-                    $.get(this.href, function(data){
-
-                        $('#dialogContent').html(data);
-                        $('#modDialog').modal('show');
-                    });
+            $('.login_window_button').on('click', function (e) {
+                $.get('/accounts/login', function (data) {
+                    $('forAjax').html(data);
+                    $('.login_wrapper').addClass('show');
                 });
-            })
+            });
+
         </script>
     </div>
 </body>
